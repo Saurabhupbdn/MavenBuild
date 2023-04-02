@@ -1,7 +1,2 @@
-HelloWorld Servlet example with corresponding Dockerfile
-
-Use Maven Build first to create war file in Target folder.
-
-mvn clean package
-
-Artifact will be created in target folder.
+Here we deploy the java-servlet with the help of tomcat server.
+With the help jenkins pipeline.
