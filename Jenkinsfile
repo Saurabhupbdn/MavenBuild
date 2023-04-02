@@ -4,7 +4,7 @@ pipeline {
          maven '3.6.3'
     }
     stages {
-        stage('Test stage') {
+        stage('Testing stage') {
             agent any
             steps {
                 sh 'mvn test'
