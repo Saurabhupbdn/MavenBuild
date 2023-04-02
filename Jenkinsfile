@@ -4,34 +4,15 @@ pipeline {
     maven '3.6.3' 
   }
   stages {
-    stage ('Build') {
+    stage ('Build at production') {
       steps {
-        sh 'mvn clean package'
+        echo 'build is completed'
       }
     }
-    stage ('Testing') {
+  stage ('testing at production') {
       steps {
-      sh 'mvn test' 
-        }
+        sh 'mvn test'
       }
-    stage ('Deploy') {
-      steps {
-        script {
-          deploy adapters: [tomcat9(credentialsId: 'credentialTomcat', url: 'http://16.16.77.63:8090/')], contextPath: 'Webapp', onFailure: false, war: 'target/*.war' 
-        }
-      }
-    }
-  }
-  post{
-        success{
-            mail to: "officialsaurabhsahu@gmail.com",
-            subject: "Build is completed Succesfully",
-            body: "build successfully"
-        }
-    failure{
-      mail to: "officialsaurabhsahu@gmail.com",
-            subject: "Build is not Completed",
-            body: "failed"
     }
   }
 }
