@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-   maven 'Maven 3.6.3'
+    maven "3.6.3"
   }
   stages {
     stage ('Build') {
@@ -17,7 +17,7 @@ pipeline {
     stage ('Deploy') {
       steps {
         script {
-          deploy adapters: [tomcat9(credentialsId: 'credentialTomcat', url: 'http://16.16.77.63:8090/')], contextPath: 'Webapp', onFailure: false, war: 'target/*.war' 
+          deploy adapters: [tomcat9(credentialsId: 'credentialTomcat', url: 'http://16.16.77.63:8090/')], contextPath: null, onFailure: false, war: 'target/*.war' 
         }
       }
     }
