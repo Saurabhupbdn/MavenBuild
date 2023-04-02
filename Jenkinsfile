@@ -1,27 +1,37 @@
-node(){
-
-	def sonarHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-	
-	stage('Code Checkout'){
-		checkout changelog: false, poll: false, scm: scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHubCreds', url: 'https://github.com/anujdevopslearn/MavenBuild']])
-	}
-	stage('Build Automation'){
-		sh """
-			ls -lart
-			mvn clean install
-			ls -lart target
-
-		"""
-	}
-	
-	stage('Code Scan'){
-		withSonarQubeEnv(credentialsId: 'SonarQubeCreds') {
-			sh "${sonarHome}/bin/sonar-scanner"
-		}
-		
-	}
-	
-	stage('Code Deployment'){
-		deploy adapters: [tomcat9(credentialsId: 'credentialTomcat', path: '', url: 'http://16.16.77.63:8090/')], contextPath: 'webapp', onFailure: false, war: 'target/*.war'
-	}
+pipeline {
+  agent any
+  tools {
+    maven '3.6.3' 
+  }
+  stages {
+    stage ('Build') {
+      steps {
+        sh 'mvn clean package'
+      }
+    }
+    stage ('Testing') {
+      steps {
+      sh 'mvn test' 
+        }
+      }
+    stage ('Deploy') {
+      steps {
+        script {
+          deploy adapters: [tomcat9(credentialsId: 'credentialTomcat', url: 'http://16.16.77.63:8090/')], contextPath: 'Webapp', onFailure: false, war: 'target/*.war' 
+        }
+      }
+    }
+  }
+  post{
+        success{
+            mail to: "officialsaurabhsahu@gmail.com",
+            subject: "Build is completed Succesfully",
+            body: "build successfully"
+        }
+    failure{
+      mail to: "officialsaurabhsahu@gmail.com",
+            subject: "Build is not Completed",
+            body: "failed"
+    }
+  }
 }
