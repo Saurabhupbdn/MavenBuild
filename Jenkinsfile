@@ -4,17 +4,17 @@ pipeline {
     maven '3.6.3'
   }
   stages {
-    stage ('Build') {
+    stage ('Building phase') {
       steps {
         sh 'mvn clean package'
       }
     }
-    stage ('Testing') {
+    stage ('Testing Phase') {
       steps {
       sh 'mvn test' 
         }
       }
-    stage ('Deploy') {
+    stage ('Deploying phase') {
       steps {
         script {
           deploy adapters: [tomcat9(credentialsId: 'credentialofTomcat', url: 'http://13.49.41.152:8080')], contextPath: null, onFailure: false, war: 'target/*.war' 
